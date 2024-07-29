@@ -42,6 +42,7 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
       value: "",
       language: fileName2Language(name),
     };
+    console.log(1111111111111, 45);
     setFiles({ ...files });
   };
 
@@ -51,6 +52,7 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
   };
 
   const updateFileName = (oldFieldName: string, newFieldName: string) => {
+    
     if (!files[oldFieldName] || newFieldName === undefined || newFieldName === null) return;
     const { [oldFieldName]: value, ...rest } = files;
     const newFile = {
@@ -60,6 +62,7 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
         name: newFieldName,
       },
     };
+    
     setFiles({ ...rest, ...newFile });
   };
 

@@ -20,8 +20,9 @@ export default function CodeEditor() {
 
   function onEditorChange(value?: string) {
     // console.log(...arguments);
-    files[file.name]!.value = value!
-    setFiles(files);
+    files[file.name].value = value!
+    console.log(value, files, 24);
+    setFiles({...files});
   }
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
