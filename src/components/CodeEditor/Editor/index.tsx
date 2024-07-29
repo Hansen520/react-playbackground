@@ -21,10 +21,10 @@ interface Props {
 
 export default function Editor(props: Props) {
   const { file, onChange, options } = props;
-  const code = `export default function App() {
-        return <div>xxx</div>
-    }
-    `;
+  // const code = `export default function App() {
+  //       return <div>xxx</div>
+  //   }
+  //   `;
 
   const handleEditorMount: OnMount = (editor, monaco) => {
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyJ, () => {
