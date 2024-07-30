@@ -103,7 +103,7 @@ function customResolver(files: Files): PluginObj {
   };
 }
 
-export const compile = async (files: Files) => {
+export const compile = (files: Files) => {
   const main = files[ENTRY_FILE_NAME];
   return babelTransform(ENTRY_FILE_NAME, main.value, files);
 };

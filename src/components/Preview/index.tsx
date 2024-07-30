@@ -13,7 +13,7 @@ export default function Preview() {
   const { files } = useContext(PlaygroundContext);
   const [compiledCode, setCompiledCode] = useState("");
   const getIframeUrl = () => {
-    console.log(files[IMPORT_MAP_FILE_NAME].value, 16);
+    // console.log(files[IMPORT_MAP_FILE_NAME].value, 16);
     const res = iframeRaw
       .replace(
         '<script type="importmap"></script>',
@@ -28,18 +28,18 @@ export default function Preview() {
   const [iframeUrl, setIframeUrl] = useState(getIframeUrl());
 
   useEffect(() => {
-    (async () => {
-      const res = await compile(files);
-      console.log(res, 18);
-      console.log(files, 17);
-      setCompiledCode(res);
-      setIframeUrl(getIframeUrl());
-    })();
+    const res = compile(files);
+    setCompiledCode(res);
   }, [files]);
+
+  useEffect(() => {
+    setIframeUrl(getIframeUrl());
+    console.log(files[IMPORT_MAP_FILE_NAME].value, compiledCode, 37);
+  }, [files[IMPORT_MAP_FILE_NAME].value, compiledCode]); // compiledCode有变化直接更新
 
   return (
     <div style={{ height: "100%" }}>
-      {JSON.stringify(compiledCode)}
+      <div style={{ whiteSpace: 'pre-line' }}>{JSON.stringify(compiledCode)}</div>
       --------------------------------------
       {JSON.stringify(iframeUrl)}
       <iframe

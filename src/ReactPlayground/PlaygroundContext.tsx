@@ -42,7 +42,7 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
       value: "",
       language: fileName2Language(name),
     };
-    console.log(1111111111111, 45);
+    
     setFiles({ ...files });
   };
 
