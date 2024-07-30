@@ -11,7 +11,7 @@ import { Popconfirm } from "antd";
 export interface FileNameItemProps {
   value: string;
   actived: boolean;
-  creating: boolean;
+  creating?: boolean;
   readonly: boolean;
   onEditComplete: (name: string) => void;
   onRemove: () => void;

@@ -44,7 +44,7 @@ function FileNameList() {
           key={item + index}
           value={item}
           readonly={readonlyFileNames.includes(item)}
-          creating={index === arr.length - 1}
+          // creating={index === arr.length - 1}
           actived={selectedFileName === item}
           onClick={() => setSelectedFileName(item)}
           onRemove={() => handleRemove(item)}

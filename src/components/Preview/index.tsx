@@ -5,9 +5,17 @@
 import { useContext, useEffect, useState } from "react";
 import { PlaygroundContext } from "../../ReactPlayground/PlaygroundContext";
 import Editor from "../CodeEditor/Editor";
+import { Message } from '../Message';
 import { compile } from "./compiler";
 import iframeRaw from "./iframe.html?raw";
 import { IMPORT_MAP_FILE_NAME } from "../../ReactPlayground/files";
+
+interface MessageData {
+  data: {
+    type: string
+    message: string
+  }
+}
 
 export default function Preview() {
   const { files } = useContext(PlaygroundContext);
@@ -26,6 +34,21 @@ export default function Preview() {
     return URL.createObjectURL(new Blob([res], { type: "text/html" }));
   };
   const [iframeUrl, setIframeUrl] = useState(getIframeUrl());
+  const [error, setError] = useState('');
+
+  const handleMessage = (msg: MessageData) => {
+    const { type, message } = msg.data;
+    if (type === 'error') {
+      setError(message);
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    }
+  }, [])
 
   useEffect(() => {
     const res = compile(files);
@@ -39,8 +62,8 @@ export default function Preview() {
 
   return (
     <div style={{ height: "100%" }}>
-      <div style={{ whiteSpace: 'pre-line' }}>{JSON.stringify(compiledCode)}</div>
-      --------------------------------------
+      {/* <div style={{ whiteSpace: 'pre-line' }}>{JSON.stringify(compiledCode)}</div>
+      -------------------------------------- */}
       {JSON.stringify(iframeUrl)}
       <iframe
         src={iframeUrl}
@@ -51,6 +74,8 @@ export default function Preview() {
           border: "none",
         }}
       />
+      <Message type='error' content={error} />
+
       {/* <Editor
         file={{
           name: "dist.js",
