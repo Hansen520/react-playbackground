@@ -21,7 +21,6 @@ function FileNameList() {
   const handleEditComplete = (name: string, prevName: string) => {
     updateFileName(prevName, name);
     setSelectedFileName(name);
-
     setCreating(false);
   };
 
@@ -39,7 +38,7 @@ function FileNameList() {
 
   return (
     <div className={styles.tabs}>
-      {tabs.map((item, index, arr) => (
+      {tabs.map((item, index) => (
         <FileNameItem
           key={item + index}
           value={item}

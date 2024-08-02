@@ -3,10 +3,14 @@
     padding: 0 20px;
     box-sizing: border-box;
     border-bottom: 1px solid #000;
+    background-color: var(--bg);
+    color: var(--text);
   
     display: flex;
     align-items: center;
     justify-content: space-between;
+    font-family: Georgia, serif;
+    font-weight: 700;
 
     .logo {
       display: flex;
