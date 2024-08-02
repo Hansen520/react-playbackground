@@ -27,7 +27,7 @@ function FileNameList() {
   const [creating, setCreating] = useState(false);
   const readonlyFileNames = [ENTRY_FILE_NAME, IMPORT_MAP_FILE_NAME, APP_COMPONENT_FILE_NAME];
   const addTab = () => {
-    addFile("Comp" + Math.random().toString().slice(2, 8) + ".tsx");
+    addFile("Comp" + Math.random().toString().slice(2, 5) + ".tsx");
     setCreating(true);
   };
 

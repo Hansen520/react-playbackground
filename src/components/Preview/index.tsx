@@ -2,13 +2,14 @@
  * @Date: 2024-05-06 16:51:08
  * @Description: description
  */
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { PlaygroundContext } from "../../ReactPlayground/PlaygroundContext";
-import Editor from "../CodeEditor/Editor";
+// import Editor from "../CodeEditor/Editor";
 import { Message } from '../Message';
-import { compile } from "./compiler";
+import CompileWorker from "./compiler.worker?worker";
 import iframeRaw from "./iframe.html?raw";
 import { IMPORT_MAP_FILE_NAME } from "../../ReactPlayground/files";
+import { debounce } from "lodash-es";
 
 interface MessageData {
   data: {
@@ -51,8 +52,32 @@ export default function Preview() {
   }, [])
 
   useEffect(() => {
-    const res = compile(files);
-    setCompiledCode(res);
+    // const res = compile(files);
+    // setCompiledCode(res);
+  }, [files]);
+
+  const compilerWorkerRef = useRef<Worker>(); // 每次组件重新渲染时，都会创建一个新的Worker实例，导致之前的Worker实例被垃圾回收，从而无法正常工作
+
+  useEffect(() => {
+    if (!compilerWorkerRef.current) {
+      compilerWorkerRef.current = new CompileWorker();
+      compilerWorkerRef.current.addEventListener('message', (data) => {
+        console.log('worker', data) ;
+        if (data.type === 'COMPILED_CODE') {
+          setCompiledCode(data.data);
+        } else {
+          console.log('error', data);
+        }
+      })
+    }
+  }, []);
+
+  useEffect(() => {
+    // 反向传递file信息
+    debounce(() => {
+      compilerWorkerRef.current?.postMessage(files);
+    }, 500);
+    
   }, [files]);
 
   useEffect(() => {
