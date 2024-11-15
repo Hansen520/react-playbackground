@@ -2,33 +2,61 @@
  * @Date: 2024-05-06 16:35:50
  * @Description: description
 -->
-# React + TypeScript + Vite
+```javascript
+  import { transform } from '@babel/standalone';
+import type { PluginObj } from '@babel/core';
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+function App() {
 
-Currently, two official plugins are available:
+    const code1 =`
+    function add(a, b) {
+        return a + b;
+    }
+    export { add };
+    `;
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+    const url = URL.createObjectURL(new Blob([code1], { type: 'application/javascript' }));
 
-## Expanding the ESLint configuration
+    const transformImportSourcePlugin: PluginObj = {
+        visitor: {
+            ImportDeclaration(path) {
+                path.node.source.value = url; // 将code1当作一个blob外联引导进来
+            }
+        },
+    }
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+  const code = `import { add } from './add.ts'; console.log(add(2, 3));`
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
+  function onClick() {
+    const res = transform(code, { // code放入之后, 通过babel翻译，transformImportSourcePlugin，就是将./add.ts替换为url
+      presets: ['react', 'typescript'],
+      filename: 'guang.ts',
+      plugins: [transformImportSourcePlugin]
+    });
+    console.log(res.code);
+  }
+
+  return (
+    <div>
+      <button onClick={onClick}>编译</button>
+    </div>
+  )
 }
-```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+export default App
+
+```
+# 第一部分
+如何引入编辑器里写的 ./Aaa.tsx 这种模块，如何引入 react、react-dom 这种模块我们就都清楚了。
+
+分别用 Blob + URL.createBlobURL（核心包：@types/babel__core） 和 import maps机制 + esm.sh 来做。
+
+# 第二部分
+编辑器部分用 @monaco-editor/react
+
+npm install --save allotment 实现文本与预览实现拖拽的功能
+
+npm install --save @typescript/ata -f  // 让引入第三方包的时候有提示信息
+
+@babel/standalone // 用于文件的编译

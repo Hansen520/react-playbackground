@@ -36,9 +36,11 @@ export default function Editor(props: Props) {
     });
 
     const ata = createATA((code, path) => {
+      // 展示代码和文件路径
       monaco.languages.typescript.typescriptDefaults.addExtraLib(code, `file://${path}`);
     });
 
+    // 拿到的包若隐若现的展示在编辑器里面
     editor.onDidChangeModelContent(() => {
       ata(editor.getValue());
     });
@@ -61,8 +63,8 @@ export default function Editor(props: Props) {
           enabled: false,
         },
         scrollbar: {
-          verticalScrollbarSize: 6,
-          horizontalScrollbarSize: 6,
+          verticalScrollbarSize: 6, // 设计滚动条垂直
+          horizontalScrollbarSize: 6, // 水平
         },
         ...options
       }}

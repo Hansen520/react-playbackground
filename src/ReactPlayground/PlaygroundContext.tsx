@@ -41,7 +41,7 @@ const getFilesFromUrl = () => {
   try {
     const hash = uncompress(window.location.hash.slice(1));
     files = JSON.parse(hash);
-    console.log(files, 44);
+    // console.log(files, 44);
   } catch (error) {
     console.error(error)
   } 
@@ -84,7 +84,7 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
   };
 
   useEffect(() => {
-    console.log(files, 86);
+    // console.log(files, 86);
     const hash = compress(JSON.stringify(files));
     window.location.hash = hash;
   }, [files]);

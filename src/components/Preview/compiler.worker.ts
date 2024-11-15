@@ -7,6 +7,7 @@ import { Files } from "../../ReactPlayground/PlaygroundContext";
 import { ENTRY_FILE_NAME } from "../../ReactPlayground/files";
 import { PluginObj } from "@babel/core";
 
+// 编译前处理
 export const beforeTransformCode = (filename: string, code: string) => {
   let _code = code;
   const regexReact = /import\s+React/g;
@@ -108,7 +109,9 @@ export const compile = (files: Files) => {
   return babelTransform(ENTRY_FILE_NAME, main.value, files);
 };
 
-self.addEventListener('message', async ({ data }) => {
+self.addEventListener('message', ({ data }) => {
+  console.log("收到消息", data)
+  console.log(compile(data), 114)
   try {
       self.postMessage({
           type: 'COMPILED_CODE',

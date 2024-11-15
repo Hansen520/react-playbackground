@@ -6,7 +6,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { PlaygroundContext } from "../../ReactPlayground/PlaygroundContext";
 // import Editor from "../CodeEditor/Editor";
 import { Message } from '../Message';
-import CompileWorker from "./compiler.worker?worker";
+import CompilerWorker from "./compiler.worker?worker";
+import Abc from "./abc.worker?worker";
 import iframeRaw from "./iframe.html?raw";
 import { IMPORT_MAP_FILE_NAME } from "../../ReactPlayground/files";
 import { debounce } from "lodash-es";
@@ -38,12 +39,12 @@ export default function Preview() {
   const [error, setError] = useState('');
 
   const handleMessage = (msg: MessageData) => {
+    console.log('持续拿出数据', msg);
     const { type, message } = msg.data;
     if (type === 'error') {
       setError(message);
     }
   }
-
   useEffect(() => {
     window.addEventListener('message', handleMessage);
     return () => {
@@ -51,38 +52,45 @@ export default function Preview() {
     }
   }, [])
 
+  const abc = useRef<Worker>();
+
   useEffect(() => {
-    // const res = compile(files);
-    // setCompiledCode(res);
-  }, [files]);
+    const post = new Abc();
+    post.postMessage(12345666);
+  }, [])
+
+  // useEffect(() => {
+  //   // const res = compile(files);
+    // setCompiledCode('12323323');
+  //   // console.log(111);
+  //   compilerWorkerRef.current?.postMessage(files);
+  // }, [files]);
 
   const compilerWorkerRef = useRef<Worker>(); // 每次组件重新渲染时，都会创建一个新的Worker实例，导致之前的Worker实例被垃圾回收，从而无法正常工作
 
   useEffect(() => {
+    // console.log(files, compilerWorkerRef.current, 62);
+    
     if (!compilerWorkerRef.current) {
-      compilerWorkerRef.current = new CompileWorker();
-      compilerWorkerRef.current.addEventListener('message', (data) => {
+      compilerWorkerRef.current = new CompilerWorker();
+      compilerWorkerRef.current.addEventListener('message', ({ data }) => {
         console.log('worker', data) ;
         if (data.type === 'COMPILED_CODE') {
           setCompiledCode(data.data);
         } else {
-          console.log('error', data);
+          // console.log('error', data);
         }
       })
     }
   }, []);
 
-  useEffect(() => {
-    // 反向传递file信息
-    debounce(() => {
-      compilerWorkerRef.current?.postMessage(files);
-    }, 500);
-    
-  }, [files]);
+  useEffect(debounce(() => {
+    compilerWorkerRef.current?.postMessage(files);
+  }, 500), [files]);
 
   useEffect(() => {
+    console.log(files[IMPORT_MAP_FILE_NAME].value, compiledCode, 82);
     setIframeUrl(getIframeUrl());
-    console.log(files[IMPORT_MAP_FILE_NAME].value, compiledCode, 37);
   }, [files[IMPORT_MAP_FILE_NAME].value, compiledCode]); // compiledCode有变化直接更新
 
   return (
@@ -90,6 +98,7 @@ export default function Preview() {
       {/* <div style={{ whiteSpace: 'pre-line' }}>{JSON.stringify(compiledCode)}</div>
       -------------------------------------- */}
       {JSON.stringify(iframeUrl)}
+      {JSON.stringify(compiledCode)}
       <iframe
         src={iframeUrl}
         style={{
@@ -100,7 +109,7 @@ export default function Preview() {
         }}
       />
       <Message type='error' content={error} />
-
+      
       {/* <Editor
         file={{
           name: "dist.js",

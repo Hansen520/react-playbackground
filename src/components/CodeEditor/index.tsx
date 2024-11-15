@@ -21,7 +21,7 @@ export default function CodeEditor() {
   function onEditorChange(value?: string) {
     // console.log(...arguments);
     files[file.name].value = value!;
-    console.log(value, files, 24);
+    // console.log(value, files, 24);
     setFiles({ ...files });
   }
   return (
