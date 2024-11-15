@@ -1,8 +1,7 @@
 {
     "imports": {
       "react": "https://esm.sh/react@18.2.0",
-      "react-dom/client": "https://esm.sh/react-dom@18.2.0",
-      "antd": "https://esm.sh/antd@5.22.1"
+      "react-dom/client": "https://esm.sh/react-dom@18.2.0"
     }
   }
   
