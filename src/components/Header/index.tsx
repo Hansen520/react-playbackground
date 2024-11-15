@@ -20,7 +20,7 @@ export default function Header() {
     <div className={styles.header}>
       <div className={styles.logo}>
         <img alt="logo" src={logoSvg} />
-        <span>React 线上编辑器</span>
+        <span>HS's React 线上编辑器</span>
       </div>
       <div className={styles.links}>
         {theme === "light" && (
