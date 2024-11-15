@@ -39,7 +39,7 @@ export default function Preview() {
   const [error, setError] = useState('');
 
   const handleMessage = (msg: MessageData) => {
-    console.log('持续拿出数据', msg);
+    // console.log('持续拿出数据', msg);
     const { type, message } = msg.data;
     if (type === 'error') {
       setError(message);
@@ -52,7 +52,6 @@ export default function Preview() {
     }
   }, [])
 
-  const abc = useRef<Worker>();
 
   useEffect(() => {
     const post = new Abc();
@@ -72,6 +71,7 @@ export default function Preview() {
     // console.log(files, compilerWorkerRef.current, 62);
     
     if (!compilerWorkerRef.current) {
+      // 第二次时，url已经拿到数据了
       compilerWorkerRef.current = new CompilerWorker();
       compilerWorkerRef.current.addEventListener('message', ({ data }) => {
         console.log('worker', data) ;
@@ -89,7 +89,7 @@ export default function Preview() {
   }, 500), [files]);
 
   useEffect(() => {
-    console.log(files[IMPORT_MAP_FILE_NAME].value, compiledCode, 82);
+    // console.log(files[IMPORT_MAP_FILE_NAME].value, compiledCode, 82);
     setIframeUrl(getIframeUrl());
   }, [files[IMPORT_MAP_FILE_NAME].value, compiledCode]); // compiledCode有变化直接更新
 
@@ -98,7 +98,7 @@ export default function Preview() {
       {/* <div style={{ whiteSpace: 'pre-line' }}>{JSON.stringify(compiledCode)}</div>
       -------------------------------------- */}
       {JSON.stringify(iframeUrl)}
-      {JSON.stringify(compiledCode)}
+      {/* {JSON.stringify(compiledCode)} */}
       <iframe
         src={iframeUrl}
         style={{

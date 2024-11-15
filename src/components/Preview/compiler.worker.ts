@@ -36,7 +36,7 @@ export const babelTransform = (filename: string, code: string, files: Files) => 
 // babel转义
 const getModuleFile = (files: Files, modulePath: string) => {
   let moduleName = modulePath.split("./").pop() || "";
-  console.log(moduleName, 28);
+  // console.log(moduleName, 28);
   if (!moduleName.includes(".")) {
     const realModuleName = Object.keys(files)
       .filter((key) => {
@@ -45,7 +45,7 @@ const getModuleFile = (files: Files, modulePath: string) => {
       .find((key) => {
         return key.split(".").includes(moduleName);
       });
-    console.log(realModuleName, 37);
+    // console.log(realModuleName, 37);
     if (realModuleName) {
       moduleName = realModuleName;
     }
@@ -111,7 +111,6 @@ export const compile = (files: Files) => {
 
 self.addEventListener('message', ({ data }) => {
   console.log("收到消息", data)
-  console.log(compile(data), 114)
   try {
       self.postMessage({
           type: 'COMPILED_CODE',
